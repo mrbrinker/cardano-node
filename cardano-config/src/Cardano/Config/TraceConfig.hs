@@ -59,6 +59,7 @@ data TraceSelection
   , traceTxInbound :: !Bool
   , traceTxOutbound :: !Bool
   , traceTxSubmissionProtocol :: !Bool
+  , traceKeepAliveClient:: !Bool
   } deriving (Eq, Show)
 
 
@@ -96,4 +97,5 @@ traceConfigParser v =
     <*> v .:? "TraceMux" .!= True
     <*> v .:? "TraceTxInbound" .!= False
     <*> v .:? "TraceTxOutbound" .!= False
-    <*> v .:? "TraceTxSubmissionProtocol" .!= False)
+    <*> v .:? "TraceTxSubmissionProtocol" .!= False
+    <*> v .:? "TraceKeepAliveClient" .!= True)

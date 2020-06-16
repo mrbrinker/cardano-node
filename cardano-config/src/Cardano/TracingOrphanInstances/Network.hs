@@ -33,6 +33,7 @@ import           Ouroboros.Network.BlockFetch.ClientState
 import           Ouroboros.Network.BlockFetch.Decision
                    (FetchDecision, FetchDecline (..))
 import           Ouroboros.Network.Codec (AnyMessage (..))
+import           Ouroboros.Network.KeepAlive (TraceKeepAliveClient)
 import qualified Ouroboros.Network.NodeToClient as NtC
 import qualified Ouroboros.Network.NodeToNode   as NtN
 import           Ouroboros.Network.NodeToNode
@@ -262,6 +263,10 @@ instance HasSeverityAnnotation (Identity (SubscriptionTrace LocalAddress)) where
     SubscriptionTraceCloseSocket {} -> Debug
 
 
+instance HasPrivacyAnnotation (TraceKeepAliveClient peer)
+instance HasSeverityAnnotation (TraceKeepAliveClient peer) where
+  getSeverityAnnotation _ = Info
+
 instance Transformable Text IO (Identity (SubscriptionTrace LocalAddress)) where
   trTransformer = trStructuredText
 instance HasTextFormatter (Identity (SubscriptionTrace LocalAddress)) where
@@ -388,6 +393,9 @@ instance (Show peer)
     "Bearer on " <> pack (show peer)
    <> " event: " <> pack (show ev)
 
+
+instance (Show peer) => Transformable Text IO (TraceKeepAliveClient peer) where
+  trTransformer = trStructured
 
 --
 -- | instances of @ToObject@
@@ -650,3 +658,9 @@ instance (Show peer) => ToObject (WithMuxBearer peer MuxTrace) where
     mkObject [ "kind" .= String "MuxTrace"
              , "bearer" .= show b
              , "event" .= show ev ]
+
+instance (Show peer) => ToObject (TraceKeepAliveClient peer) where
+  toObject _verb ev =
+    mkObject [ "kind" .= String "TraceKeepAliveClient" 
+             , "event" .= show ev
+             ]

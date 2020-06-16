@@ -457,6 +457,7 @@ mkConsensusTracers' elidingFetchDecision measureBlockForging
       , Consensus.blockchainTimeTracer = tracerOnOff' (traceBlockchainTime traceConf) $
           Tracer $ \ev ->
             traceWith (toLogObject tracer) (readableTraceBlockchainTimeEvent ev)
+      , Consensus.keepAliveClientTracer = tracerOnOff (traceKeepAliveClient traceConf) tVerb "KeepAliveClient" tracer
 
       }
  where
@@ -477,6 +478,7 @@ mkConsensusTracers' _ _ _ _ TracingOff _ = Consensus.Tracers
   , Consensus.mempoolTracer = nullTracer
   , Consensus.forgeTracer = nullTracer
   , Consensus.blockchainTimeTracer = nullTracer
+  , Consensus.keepAliveClientTracer = nullTracer
   }
 
 teeForge

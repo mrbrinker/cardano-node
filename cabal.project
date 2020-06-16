@@ -6,6 +6,8 @@ packages:
     cardano-config
     cardano-node
 
+
+
 package cardano-api
   ghc-options: -Werror -Wall -Wredundant-constraints -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields
 
@@ -315,91 +317,91 @@ source-repository-package
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-network
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: io-sim
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-consensus
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-consensus/ouroboros-consensus-mock
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-consensus-byron
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-consensus-shelley
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-consensus-cardano
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: typed-protocols
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: typed-protocols-examples
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: ouroboros-network-framework
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: network-mux
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: io-sim-classes
 
 source-repository-package
   type: git
   location: https://github.com/input-output-hk/ouroboros-network
-  tag: ceafa31844e6e9883d5d5634544045eab9c5f2e9
+  tag: e317925ef26d039f479d8f1cb6aed8dccdd5abc3
   --sha256: 08zkx4si4kb761n4hcmp1dmfppfgjm56z3flsdfd7qvm9kn4l78l
   subdir: Win32-network
 
