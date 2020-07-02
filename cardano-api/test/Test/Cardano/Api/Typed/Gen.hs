@@ -33,6 +33,11 @@ genAddressShelley =
     , makeByronAddress <$> genVerificationKey AsByronKey <*> genNetworkId
     ]
 
+genBlockIssuerSignKey :: Gen BlockIssuerKey
+genBlockIssuerSignKey = Gen.choice [ StakePoolBlockIssuer <$> genSigningKey AsStakePoolKey
+                                   , GenesisDelegateBlockIssuer <$> genSigningKey AsGenesisDelegateKey
+                                   ]
+
 genKESPeriod :: Gen KESPeriod
 genKESPeriod = KESPeriod <$> Gen.word Range.constantBounded
 
@@ -55,13 +60,15 @@ genOperationalCertificateIssueCounter = snd <$> genOperationalCertificateWithCou
 genOperationalCertificateWithCounter :: Gen (OperationalCertificate, OperationalCertificateIssueCounter)
 genOperationalCertificateWithCounter = do
   kesVKey <- genVerificationKey AsKesKey
-  stakePoolSign <- genSigningKey AsStakePoolKey
+  blockIssuerSignKey <- genBlockIssuerSignKey
   kesP <- genKESPeriod
   c <- Gen.integral $ Range.linear 0 1000
-  let stakePoolVer = getVerificationKey stakePoolSign
-      iCounter = OperationalCertificateIssueCounter c stakePoolVer
+  stakePoolVer <- case blockIssuerSignKey of
+                   StakePoolBlockIssuer sKeyStakePool -> return  $ getVerificationKey sKeyStakePool
+                   GenesisDelegateBlockIssuer sKeyGenDeleg -> return . castVerificationKey $ getVerificationKey sKeyGenDeleg
+  let iCounter = OperationalCertificateIssueCounter c stakePoolVer
 
-  case issueOperationalCertificate kesVKey stakePoolSign kesP iCounter of
+  case issueOperationalCertificate kesVKey blockIssuerSignKey kesP iCounter of
     -- This case should be impossible as we clearly derive the verification
     -- key from the generated signing key.
     Left err -> fail $ displayError err

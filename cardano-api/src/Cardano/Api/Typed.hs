@@ -54,6 +54,10 @@ module Cardano.Api.Typed (
     Crypto.mkSeedFromBytes,
     Crypto.readSeedFromSystemEntropy,
 
+    -- ** Converting keys
+    Shelley.coerceKeyRole,
+    ShelleyBlockIssuerVerificationKey,
+
     -- ** Hashes
     -- | In Cardano most keys are identified by their hash, and hashes are
     -- used in many other places.
@@ -240,6 +244,7 @@ module Cardano.Api.Typed (
     VrfKey,
 
     -- ** Operational certificates
+    BlockIssuerKey(..),
     OperationalCertificate(..),
     OperationalCertificateIssueCounter(..),
     Shelley.KESPeriod(..),
@@ -261,6 +266,8 @@ module Cardano.Api.Typed (
     -- ** Protocol parameter updates
     UpdateProposal,
     ProtocolParametersUpdate(..),
+    EpochNo,
+    NetworkMagic(..),
     makeShelleyUpdateProposal,
   ) where
 
@@ -2024,37 +2031,50 @@ instance Error OperationalCertIssueError where
       --TODO: include key ids
 
 issueOperationalCertificate :: VerificationKey KesKey
-                            -> SigningKey StakePoolKey
+                            -> BlockIssuerKey
                             -> Shelley.KESPeriod
                             -> OperationalCertificateIssueCounter
                             -> Either OperationalCertIssueError
                                       (OperationalCertificate,
                                       OperationalCertificateIssueCounter)
-issueOperationalCertificate (KesVerificationKey kesVKey)
-                            (StakePoolSigningKey poolSKey)
-                            kesPeriod
-                            (OperationalCertificateIssueCounter counter poolVKey)
-    | poolVKey /= poolVKey'
-    = Left (OperationalCertKeyMismatch poolVKey poolVKey')
+issueOperationalCertificate
+  (KesVerificationKey kesVKey)
+  (StakePoolBlockIssuer (StakePoolSigningKey sKeyStakePool))
+  kesPeriod
+  (OperationalCertificateIssueCounter counter poolVKey) =
+    let poolSig :: Crypto.SignedDSIGN (Shelley.DSIGN ShelleyCrypto) (Shelley.VerKeyKES ShelleyCrypto, Natural, Shelley.KESPeriod)
+        poolSig = Crypto.signedDSIGN () (kesVKey, counter, kesPeriod) sKeyStakePool
 
-    | otherwise
-    = Right (OperationalCertificate ocert poolVKey,
-            OperationalCertificateIssueCounter (succ counter) poolVKey)
-  where
-    poolVKey' = getVerificationKey (StakePoolSigningKey poolSKey)
+        poolVKey' = getVerificationKey (StakePoolSigningKey sKeyStakePool)
 
-    ocert     :: Shelley.OCert ShelleyCrypto
-    ocert     = Shelley.OCert kesVKey counter kesPeriod signature
+        ocert :: Shelley.OCert ShelleyCrypto
+        ocert = Shelley.OCert kesVKey counter kesPeriod poolSig
 
-    signature :: Crypto.SignedDSIGN
-                   (Shelley.DSIGN ShelleyCrypto)
-                   (Shelley.VerKeyKES ShelleyCrypto,
-                    Natural,
-                    Shelley.KESPeriod)
-    signature = Crypto.signedDSIGN ()
-                  (kesVKey, counter, kesPeriod)
-                  poolSKey
+    in if poolVKey' /= poolVKey
+       then Left $ OperationalCertKeyMismatch poolVKey poolVKey'
+       else Right $ (OperationalCertificate ocert poolVKey, OperationalCertificateIssueCounter (succ counter) poolVKey)
 
+issueOperationalCertificate
+  (KesVerificationKey kesVKey)
+  (GenesisDelegateBlockIssuer (GenesisDelegateSigningKey sKeyGenDelegKey))
+  kesPeriod
+  (OperationalCertificateIssueCounter counter poolVKey) =
+    let genDelegSig :: Crypto.SignedDSIGN (Shelley.DSIGN ShelleyCrypto) (Shelley.VerKeyKES ShelleyCrypto, Natural, Shelley.KESPeriod)
+        genDelegSig = Crypto.signedDSIGN () (kesVKey, counter, kesPeriod) sKeyGenDelegKey
+
+        poolVKey' = castVerificationKey $ getVerificationKey (GenesisDelegateSigningKey sKeyGenDelegKey)
+
+        ocert :: Shelley.OCert ShelleyCrypto
+        ocert = Shelley.OCert kesVKey counter kesPeriod genDelegSig
+
+    in if poolVKey' /= poolVKey
+       then Left $ OperationalCertKeyMismatch poolVKey poolVKey'
+       else Right (OperationalCertificate ocert poolVKey, OperationalCertificateIssueCounter (succ counter) poolVKey)
+
+
+data BlockIssuerKey
+  = StakePoolBlockIssuer (SigningKey StakePoolKey)
+  | GenesisDelegateBlockIssuer (SigningKey GenesisDelegateKey)
 
 -- ----------------------------------------------------------------------------
 -- Node IPC protocols
@@ -2853,7 +2873,6 @@ instance HasTextEnvelope (SigningKey StakePoolKey) where
     textEnvelopeType _ = "Node operator signing key"
     -- TODO: include the actual crypto algorithm name, to catch changes
 
-
 --
 -- KES keys
 --
@@ -2999,3 +3018,5 @@ backCompatAlgorithmNameVrf p =
 (?!) :: Maybe a -> e -> Either e a
 Nothing ?! e = Left e
 Just x  ?! _ = Right x
+
+type ShelleyBlockIssuerVerificationKey = Shelley.VKey Shelley.BlockIssuer Shelley.TPraosStandardCrypto

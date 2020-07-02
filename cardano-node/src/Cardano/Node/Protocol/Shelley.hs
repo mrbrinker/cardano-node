@@ -24,7 +24,7 @@ import           Cardano.Prelude
 import           Prelude (String)
 
 import           Control.Monad.Trans.Except (ExceptT)
-import           Control.Monad.Trans.Except.Extra (firstExceptT)
+import           Control.Monad.Trans.Except.Extra (firstExceptT, newExceptT)
 import qualified Data.Text as T
 
 import qualified Data.Aeson as Aeson
@@ -39,9 +39,7 @@ import           Ouroboros.Consensus.Shelley.Node
 
 import           Shelley.Spec.Ledger.PParams (ProtVer(..))
 
-import           Cardano.Api.Shelley.OCert
-import           Cardano.Api.Shelley.VRF
-import           Cardano.Api.Shelley.KES
+import qualified Cardano.Api.Typed as Typed
 import           Cardano.Node.Types (NodeShelleyProtocolConfiguration(..))
 import           Cardano.Config.Types
                    (ProtocolFilepaths(..), GenesisFile (..))
@@ -142,19 +140,24 @@ readLeaderCredentials (Just ProtocolFilepaths {
                               shelleyKESFile  = Just kesFile
                             }) = do
 
-    (opcert, vkey) <- firstExceptT OCertError $ readOperationalCert certFile
-    vrfKey <- firstExceptT VRFError $ readVRFSigningKey vrfFile
-    kesKey <- firstExceptT KESError $ readKESSigningKey kesFile
+    Typed.OperationalCertificate opcert (Typed.StakePoolVerificationKey vkey) <-
+      firstExceptT FileError . newExceptT $ Typed.readFileTextEnvelope Typed.AsOperationalCertificate certFile
+    Typed.VrfSigningKey vrfKey <-
+      firstExceptT FileError . newExceptT $ Typed.readFileTextEnvelope (Typed.AsSigningKey Typed.AsVrfKey) vrfFile
+    Typed.KesSigningKey kesKey <-
+      firstExceptT FileError . newExceptT $ Typed.readFileTextEnvelope (Typed.AsSigningKey Typed.AsKesKey) kesFile
 
-    return $ Just TPraosLeaderCredentials {
-               tpraosLeaderCredentialsIsCoreNode =
-                 TPraosIsCoreNode {
-                   tpraosIsCoreNodeOpCert     = opcert,
-                   tpraosIsCoreNodeColdVerKey = vkey,
-                   tpraosIsCoreNodeSignKeyVRF = vrfKey
-                 },
-               tpraosLeaderCredentialsSignKey = kesKey
-             }
+    let biVerKey = Typed.coerceKeyRole vkey :: Typed.ShelleyBlockIssuerVerificationKey
+
+    return $ Just TPraosLeaderCredentials
+                    { tpraosLeaderCredentialsIsCoreNode =
+                        TPraosIsCoreNode
+                          { tpraosIsCoreNodeOpCert     = opcert
+                          , tpraosIsCoreNodeColdVerKey = biVerKey
+                          , tpraosIsCoreNodeSignKeyVRF = vrfKey
+                          }
+                    , tpraosLeaderCredentialsSignKey = kesKey
+                    }
 
 -- But not ok to supply some of the files without the others.
 readLeaderCredentials (Just ProtocolFilepaths {shelleyCertFile = Nothing}) =
@@ -170,9 +173,7 @@ readLeaderCredentials (Just ProtocolFilepaths {shelleyKESFile = Nothing}) =
 --
 
 data ShelleyProtocolInstantiationError = GenesisReadError !FilePath !String
-                                       | OCertError OperationalCertError
-                                       | VRFError VRFError
-                                       | KESError KESError
+                                       | FileError (Typed.FileError Typed.TextEnvelopeError)
 
                                        | OCertNotSpecified
                                        | VRFKeyNotSpecified
@@ -188,9 +189,7 @@ renderShelleyProtocolInstantiationError pie =
         "There was an error parsing the genesis file: "
      <> toS fp <> " Error: " <> (T.pack $ show err)
 
-    KESError   err -> renderKESError err
-    VRFError   err -> renderVRFError err
-    OCertError err -> T.pack $ show err --TODO: renderOperationalCertError
+    FileError fileErr -> T.pack $ Typed.displayError fileErr
 
     OCertNotSpecified  -> missingFlagMessage "shelley-operational-certificate"
     VRFKeyNotSpecified -> missingFlagMessage "shelley-vrf-key"

@@ -52,8 +52,8 @@ import qualified Shelley.Spec.Ledger.TxData as Shelley
 import           Cardano.Api.Shelley.Address (ShelleyAddress)
 import           Cardano.Api.Shelley.ColdKeys (KeyRole (..), OperatorKeyRole (..),
                     readVerKey)
-import           Cardano.Api.Shelley.Genesis
 import           Cardano.Api.Shelley.ColdKeys
+import           Cardano.Api.Shelley.Genesis
 import           Cardano.Api.Shelley.OCert
 import           Cardano.Api.Shelley.VRF
 import           Cardano.Api.TextView (TextViewTitle (..))
