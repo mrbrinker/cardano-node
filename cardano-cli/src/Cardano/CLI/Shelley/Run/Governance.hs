@@ -13,7 +13,7 @@ import           Control.Monad.Trans.Except.Extra (firstExceptT, left, right,
                    newExceptT)
 
 import           Cardano.Api (EpochNo, textShow)
-import           Cardano.Api.TextView (TextViewTitle (..))
+import           Cardano.Api.TextView (TextViewDescription (..))
 import           Cardano.Api.Typed (AsType (..), Error (..), FileError,
                    Lovelace, StakeCredential (..), TextEnvelopeError,
                    makeMIRCertificate, verificationKeyHash,
@@ -77,8 +77,8 @@ runGovernanceMIRCertificate mirPot vKeys rwdAmts (OutputFile oFp) = do
       . newExceptT
       $ writeFileTextEnvelope oFp (Just mirCertDesc) mirCert
   where
-    mirCertDesc :: TextViewTitle
-    mirCertDesc = TextViewTitle "Move Instantaneous Rewards Certificate"
+    mirCertDesc :: TextViewDescription
+    mirCertDesc = TextViewDescription "Move Instantaneous Rewards Certificate"
 
     checkEqualKeyRewards :: [VerificationKeyFile] -> [Lovelace] -> ExceptT ShelleyGovernanceError IO ()
     checkEqualKeyRewards keys rwds = do

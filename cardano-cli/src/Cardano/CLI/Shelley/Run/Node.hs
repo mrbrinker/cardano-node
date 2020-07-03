@@ -18,7 +18,7 @@ import           Cardano.Api.Typed (AsType (..), Error (..), FileError,
                    issueOperationalCertificate, readFileTextEnvelope,
                    writeFileTextEnvelope)
 
-import           Cardano.Api.TextView (TextViewTitle (..))
+import           Cardano.Api.TextView (TextViewDescription (..))
 import           Cardano.Config.Types (SigningKeyFile(..))
 
 import           Cardano.CLI.Shelley.Commands
@@ -73,10 +73,10 @@ runNodeKeyGenCold (VerificationKeyFile vkeyPath) (SigningKeyFile skeyPath)
       $ writeFileTextEnvelope ocertCtrPath (Just ocertCtrDesc)
       $ OperationalCertificateIssueCounter initialCounter vkey
   where
-    skeyDesc, vkeyDesc, ocertCtrDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "Stake Pool Operator Signing Key"
-    vkeyDesc = TextViewTitle "Stake Pool Operator Verification Key"
-    ocertCtrDesc = TextViewTitle $ "Next certificate issue number: " <> show initialCounter
+    skeyDesc, vkeyDesc, ocertCtrDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "Stake Pool Operator Signing Key"
+    vkeyDesc = TextViewDescription "Stake Pool Operator Verification Key"
+    ocertCtrDesc = TextViewDescription $ "Next certificate issue number: " <> show initialCounter
 
     initialCounter :: Natural
     initialCounter = 0
@@ -95,9 +95,9 @@ runNodeKeyGenKES (VerificationKeyFile vkeyPath) (SigningKeyFile skeyPath) = do
       . newExceptT
       $ writeFileTextEnvelope vkeyPath (Just vkeyDesc) vkey
   where
-    skeyDesc, vkeyDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "KES Signing Key"
-    vkeyDesc = TextViewTitle "KES Verification Key"
+    skeyDesc, vkeyDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "KES Signing Key"
+    vkeyDesc = TextViewDescription "KES Verification Key"
 
 
 runNodeKeyGenVRF :: VerificationKeyFile -> SigningKeyFile
@@ -112,9 +112,9 @@ runNodeKeyGenVRF (VerificationKeyFile vkeyPath) (SigningKeyFile skeyPath) = do
       . newExceptT
       $ writeFileTextEnvelope vkeyPath (Just vkeyDesc) vkey
   where
-    skeyDesc, vkeyDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "VRF Signing Key"
-    vkeyDesc = TextViewTitle "VRF Verification Key"
+    skeyDesc, vkeyDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "VRF Signing Key"
+    vkeyDesc = TextViewDescription "VRF Verification Key"
 
 runNodeIssueOpCert :: VerificationKeyFile
                    -- ^ This is the hot KES verification key.
@@ -170,5 +170,5 @@ runNodeIssueOpCert (VerificationKeyFile vkeyKesPath)
     getCounter :: OperationalCertificateIssueCounter -> Natural
     getCounter (OperationalCertificateIssueCounter n _) = n
 
-    ocertCtrDesc :: Natural -> TextViewTitle
-    ocertCtrDesc n = TextViewTitle $ "Next certificate issue number: " <> show n
+    ocertCtrDesc :: Natural -> TextViewDescription
+    ocertCtrDesc n = TextViewDescription $ "Next certificate issue number: " <> show n

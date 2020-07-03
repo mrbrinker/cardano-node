@@ -56,7 +56,7 @@ import           Cardano.Api.Shelley.Genesis
 import           Cardano.Api.Shelley.ColdKeys
 import           Cardano.Api.Shelley.OCert
 import           Cardano.Api.Shelley.VRF
-import           Cardano.Api.TextView (TextViewTitle (..))
+import           Cardano.Api.TextView (TextViewDescription (..))
 
 import           Cardano.CLI.Helpers (textToByteString)
 import           Cardano.CLI.Shelley.Commands
@@ -169,9 +169,9 @@ runGenesisKeyGenGenesis (VerificationKeyFile vkeyPath)
       . newExceptT
       $ writeFileTextEnvelope vkeyPath (Just vkeyDesc) vkey
   where
-    skeyDesc, vkeyDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "Genesis Signing Key"
-    vkeyDesc = TextViewTitle "Genesis Verification Key"
+    skeyDesc, vkeyDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "Genesis Signing Key"
+    vkeyDesc = TextViewDescription "Genesis Verification Key"
 
 
 runGenesisKeyGenDelegate :: VerificationKeyFile
@@ -196,10 +196,10 @@ runGenesisKeyGenDelegate (VerificationKeyFile vkeyPath)
           initialCounter
           (castVerificationKey vkey)  -- Cast to a 'StakePoolKey'
   where
-    skeyDesc, vkeyDesc, ocertCtrDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "Genesis delegate operator key"
-    vkeyDesc = TextViewTitle "Genesis delegate operator key"
-    ocertCtrDesc = TextViewTitle $ "Next certificate issue number: " <> show initialCounter
+    skeyDesc, vkeyDesc, ocertCtrDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "Genesis delegate operator key"
+    vkeyDesc = TextViewDescription "Genesis delegate operator key"
+    ocertCtrDesc = TextViewDescription $ "Next certificate issue number: " <> show initialCounter
 
     initialCounter :: Natural
     initialCounter = 0
@@ -218,9 +218,9 @@ runGenesisKeyGenDelegateVRF (VerificationKeyFile vkeyPath)
       . newExceptT
       $ writeFileTextEnvelope vkeyPath (Just vkeyDesc) vkey
   where
-    skeyDesc, vkeyDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "VRF Signing Key"
-    vkeyDesc = TextViewTitle "VRF Verification Key"
+    skeyDesc, vkeyDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "VRF Signing Key"
+    vkeyDesc = TextViewDescription "VRF Verification Key"
 
 
 runGenesisKeyGenUTxO :: VerificationKeyFile -> SigningKeyFile
@@ -236,9 +236,9 @@ runGenesisKeyGenUTxO (VerificationKeyFile vkeyPath)
       . newExceptT
       $ writeFileTextEnvelope vkeyPath (Just vkeyDesc) vkey
   where
-    skeyDesc, vkeyDesc :: TextViewTitle
-    skeyDesc = TextViewTitle "Genesis Initial UTxO Signing Key"
-    vkeyDesc = TextViewTitle "Genesis Initial UTxO Verification Key"
+    skeyDesc, vkeyDesc :: TextViewDescription
+    skeyDesc = TextViewDescription "Genesis Initial UTxO Signing Key"
+    vkeyDesc = TextViewDescription "Genesis Initial UTxO Verification Key"
 
 
 runGenesisKeyHash :: VerificationKeyFile -> ExceptT ShelleyGenesisCmdError IO ()

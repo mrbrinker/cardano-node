@@ -65,7 +65,7 @@ renderAddressRole :: AddressRole -> TextViewType
 renderAddressRole BootstrapAddr = "Genesis"
 renderAddressRole NormalAddr = "UTxO address"
 
-renderAddressDescr :: AddressRole -> TextViewTitle
+renderAddressDescr :: AddressRole -> TextViewDescription
 renderAddressDescr BootstrapAddr = "Bootstrap UTxO address"
 renderAddressDescr NormalAddr = "UTxO address"
 

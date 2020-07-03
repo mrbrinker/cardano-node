@@ -267,6 +267,7 @@ module Cardano.Api.Typed (
 
 import           Prelude
 
+import           Data.Aeson.Encode.Pretty (encodePretty)
 import           Data.Proxy (Proxy(..))
 import           Data.Kind (Constraint)
 import           Data.Void (Void)
@@ -2217,7 +2218,7 @@ deserialiseFromRawBytesHex proxy hex =
 
 type TextEnvelope = TextView.TextView
 type TextEnvelopeType = TextView.TextViewType
-type TextEnvelopeDescr = TextView.TextViewTitle
+type TextEnvelopeDescr = TextView.TextViewDescription
 
 class SerialiseAsCBOR a => HasTextEnvelope a where
     textEnvelopeType :: AsType a -> TextEnvelopeType
@@ -2245,7 +2246,7 @@ serialiseToTextEnvelope :: forall a. HasTextEnvelope a
 serialiseToTextEnvelope mbDescr a =
     TextView.TextView {
       TextView.tvType    = textEnvelopeType ttoken
-    , TextView.tvTitle   = fromMaybe (textEnvelopeDefaultDescr a) mbDescr
+    , TextView.tvDescription   = fromMaybe (textEnvelopeDefaultDescr a) mbDescr
     , TextView.tvRawCBOR = serialiseToCBOR a
     }
   where
@@ -2294,7 +2295,7 @@ writeFileTextEnvelope path mbDescr a =
     runExceptT $ do
       handleIOExceptT (FileIOError path) $ BS.writeFile path content
   where
-    content = TextView.renderTextView (serialiseToTextEnvelope mbDescr a)
+    content = LBS.toStrict $ encodePretty (serialiseToTextEnvelope mbDescr a)
 
 
 readFileTextEnvelope :: HasTextEnvelope a

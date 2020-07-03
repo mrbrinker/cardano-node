@@ -203,7 +203,7 @@ renderKeyRole GenesisKey     = "Genesis"
 renderKeyRole GenesisUTxOKey = "Genesis UTxO"
 renderKeyRole OperatorKey{}  = "Node operator"
 
-renderKeyDescr :: KeyRole -> TextViewTitle
+renderKeyDescr :: KeyRole -> TextViewDescription
 renderKeyDescr GenesisKey                         = "Genesis key"
 renderKeyDescr GenesisUTxOKey                     = "Genesis initial UTxO key"
 renderKeyDescr (OperatorKey GenesisDelegateKey)   = "Genesis delegate operator key"

@@ -81,7 +81,7 @@ execClientCommand cS fps cmd = do e <- lift . runExceptT $ runClientCommand cmd
                                       failWithCustom cS Nothing . Text.unpack $ renderClientCommandError cmdErrors
                                     Right _ -> H.success
 
--- | Checks that the 'tvType' and 'tvTitle' are equivalent between two files.
+-- | Checks that the 'tvType' and 'tvDescription' are equivalent between two files.
 checkTextEnvelopeFormat
   :: HasCallStack
   => [FilePath]

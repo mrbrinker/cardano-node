@@ -18,7 +18,7 @@ import qualified Data.ByteString.Char8 as BS
 
 import           Cardano.Api (StakePoolMetadataValidationError, Network(..),
                    decodeAndValidateStakePoolMetadata, renderStakePoolMetadataValidationError)
-import           Cardano.Api.TextView (TextViewTitle (..), textShow)
+import           Cardano.Api.TextView (TextViewDescription (..), textShow)
 import           Cardano.Api.Typed (AsType (..), Error (..), FileError (..), Key (..),
                    Lovelace, StakeCredential (..), StakePoolMetadataReference (..),
                    StakePoolParameters (..), StakePoolRelay (..), TextEnvelopeError,
@@ -155,8 +155,8 @@ runStakePoolRegistrationCert
       . newExceptT
       $ writeFileTextEnvelope outfp (Just registrationCertDesc) registrationCert
   where
-    registrationCertDesc :: TextViewTitle
-    registrationCertDesc = TextViewTitle "Stake Pool Registration Certificate"
+    registrationCertDesc :: TextViewDescription
+    registrationCertDesc = TextViewDescription "Stake Pool Registration Certificate"
 
     -- TODO: Remove this once we remove usage of 'Cardano.Api.Types.Network'
     --       from this module.
@@ -184,8 +184,8 @@ runStakePoolRetirementCert (VerificationKeyFile sPvkeyFp) retireEpoch (OutputFil
       . newExceptT
       $ writeFileTextEnvelope outfp (Just retireCertDesc) retireCert
   where
-    retireCertDesc :: TextViewTitle
-    retireCertDesc = TextViewTitle "Stake Pool Retirement Certificate"
+    retireCertDesc :: TextViewDescription
+    retireCertDesc = TextViewDescription "Stake Pool Retirement Certificate"
 
 runPoolId :: VerificationKeyFile -> ExceptT ShelleyPoolCmdError IO ()
 runPoolId (VerificationKeyFile vkeyPath) = do

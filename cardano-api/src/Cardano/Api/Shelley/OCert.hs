@@ -81,7 +81,7 @@ encodeOperationalCertIssueCounter issueCount =
       CBOR.toCBOR
       issueCount
   where
-    description = TextViewTitle $ "Next certificate issue number: "
+    description = TextViewDescription $ "Next certificate issue number: "
                                <> BSC.pack (show issueCount)
 
 

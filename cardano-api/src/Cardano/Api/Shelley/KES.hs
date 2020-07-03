@@ -60,10 +60,10 @@ renderKESError kesErr =
 
 encodeKESSigningKey :: SignKey -> TextView
 encodeKESSigningKey sKeyEs =
-  encodeToTextView tvType' tvTitle' CBOR.toCBOR sKeyEs
+  encodeToTextView tvType' tvDescription' CBOR.toCBOR sKeyEs
  where
   tvType' = "SKeyES TPraosStandardCrypto"
-  tvTitle' = "KES Signing Key"
+  tvDescription' = "KES Signing Key"
 
 decodeKESSigningKey :: TextView -> Either TextViewError SignKey
 decodeKESSigningKey tView = do
@@ -72,10 +72,10 @@ decodeKESSigningKey tView = do
 
 encodeKESVerificationKey :: VerKey -> TextView
 encodeKESVerificationKey vKeyEs =
-  encodeToTextView tvType' tvTitle' CBOR.toCBOR vKeyEs
+  encodeToTextView tvType' tvDescription' CBOR.toCBOR vKeyEs
  where
   tvType' = "VKeyES TPraosStandardCrypto"
-  tvTitle' = "KES Verification Key"
+  tvDescription' = "KES Verification Key"
 
 decodeKESVerificationKey :: TextView -> Either TextViewError VerKey
 decodeKESVerificationKey tView = do

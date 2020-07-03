@@ -45,10 +45,10 @@ data VRFError = ReadVRFSigningKeyError !TextViewFileError
 
 encodeVRFSigningKey :: SignKey -> TextView
 encodeVRFSigningKey vKeyEs =
-  encodeToTextView tvType' tvTitle' CBOR.toCBOR vKeyEs
+  encodeToTextView tvType' tvDescription' CBOR.toCBOR vKeyEs
  where
   tvType' = "SignKeyVRF PraosVRF"
-  tvTitle' = "VRF Signing Key"
+  tvDescription' = "VRF Signing Key"
 
 decodeVRFSigningKey :: TextView -> Either TextViewError SignKey
 decodeVRFSigningKey tView = do
@@ -57,10 +57,10 @@ decodeVRFSigningKey tView = do
 
 encodeVRFVerificationKey :: VerKey -> TextView
 encodeVRFVerificationKey vKeyEs =
-  encodeToTextView tvType' tvTitle' CBOR.toCBOR vKeyEs
+  encodeToTextView tvType' tvDescription' CBOR.toCBOR vKeyEs
  where
   tvType' = "VerKeyVRF PraosVRF"
-  tvTitle' = "VRF Verification Key"
+  tvDescription' = "VRF Verification Key"
 
 decodeVRFVerificationKey :: TextView -> Either TextViewError VerKey
 decodeVRFVerificationKey tView = do
