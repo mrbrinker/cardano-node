@@ -65,7 +65,7 @@ Use [Cabal - Version 3.0](https://www.haskell.org/cabal/) to build this project,
 $ cabal build cardano-node cardano-cli
 ```
 
-Install the `cardano-node` and `cardano-cli` commands using `cabal`.  Not that you may need to specify the installation directory using `--installdir`.
+Install the `cardano-node` and `cardano-cli` commands using `cabal`.  Note that you may need to specify the installation directory using `--installdir`.
 
 ```
 $ cabal install cardano-node cardano-cli
